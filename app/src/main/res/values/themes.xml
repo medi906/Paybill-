@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <style name="Theme.PayBills" parent="Theme.MaterialComponents.Light.NoActionBar">
+        <item name="colorPrimary">#1B5E20</item>
+        <item name="colorPrimaryVariant">#2E7D32</item>
+        <item name="colorOnPrimary">#FFFFFF</item>
+        <item name="colorSecondary">#FFA000</item>
+        <item name="colorSecondaryVariant">#FF8F00</item>
+        <item name="colorOnSecondary">#000000</item>
+    </style>
+</resources>
