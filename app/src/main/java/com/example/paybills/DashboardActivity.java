@@ -8,12 +8,15 @@ import android.view.ViewGroup;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
@@ -29,6 +32,7 @@ public class DashboardActivity extends AppCompatActivity {
     private RecyclerView rvRecentTransactions;
     private RecentTransactionsAdapter adapter;
     private List<String> recentList;
+    private String userEmail;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -38,6 +42,12 @@ public class DashboardActivity extends AppCompatActivity {
         mAuth = FirebaseAuth.getInstance();
         db = FirebaseFirestore.getInstance();
         recentList = new ArrayList<>();
+
+        // Get current user email
+        FirebaseUser currentUser = mAuth.getCurrentUser();
+        if (currentUser != null) {
+            userEmail = currentUser.getEmail();
+        }
 
         tvUserName = findViewById(R.id.tvUserName);
         tvTotalPaid = findViewById(R.id.tvTotalPaid);
@@ -56,8 +66,7 @@ public class DashboardActivity extends AppCompatActivity {
         loadRecentTransactions();
 
         btnSettings.setOnClickListener(v -> {
-            Intent intent = new Intent(DashboardActivity.this, SettingsActivity.class);
-            startActivity(intent);
+            Toast.makeText(DashboardActivity.this, "Settings clicked", Toast.LENGTH_SHORT).show();
         });
 
         btnLogout.setOnClickListener(v -> {
@@ -100,7 +109,7 @@ public class DashboardActivity extends AppCompatActivity {
                         }
                     }
                     tvTotalPaid.setText("UGX " + String.format("%,d", total));
-                    tvTransactionCount.setText(String.valueOf(count));
+                    tvTransactionCount.setText(count + " transactions");
                 });
     }
 
@@ -130,6 +139,7 @@ public class DashboardActivity extends AppCompatActivity {
             Intent intent = new Intent(DashboardActivity.this, PaymentActivity.class);
             intent.putExtra("categoryName", categoryName);
             intent.putExtra("categoryIcon", iconRes);
+            intent.putExtra("userEmail", userEmail);
             startActivity(intent);
         });
     }
@@ -202,6 +212,12 @@ public class DashboardActivity extends AppCompatActivity {
                 holder.tvAmount.setText(parts[1]);
                 if (parts.length >= 3) holder.tvMethod.setText(parts[2]);
                 if (parts.length >= 4) holder.tvDate.setText(parts[3]);
+
+                holder.tvAmount.setVisibility(View.VISIBLE);
+                holder.tvMethod.setVisibility(View.VISIBLE);
+                holder.tvDate.setVisibility(View.VISIBLE);
+                holder.ivCategoryIcon.setVisibility(View.VISIBLE);
+                holder.tvIconLetter.setVisibility(View.VISIBLE);
 
                 int colorIndex = position % colors.length;
                 holder.ivCategoryIcon.setBackgroundColor(colors[colorIndex]);

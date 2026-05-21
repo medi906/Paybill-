@@ -1,3 +1,10 @@
 <resources>
-    <string name="app_name">paybills</string>
+    <string name="app_name">PayBills</string>
+
+    <string-array name="payment_methods">
+        <item>Mobile Money</item>
+        <item>Credit Card</item>
+        <item>Bank Transfer</item>
+        <item>Cash</item>
+    </string-array>
 </resources>
